@@ -1,0 +1,31 @@
+Als Benutzer möchte ich mich im Spiel anmelden können,
+damit meine Spielstände und Chips gespeichert werden können.
+Der Login soll einfach sein und die Daten sollen nach dem schließen vom programm erhalten bleiben.
+
+Als Benutzer möchte ich Blackjack gegen einen Dealer spielen können,
+damit das Spiel realistischer wirkt und mehr spaß macht.
+Der Dealer soll automatisch Karten ziehen und die Regeln von Blackjack beachten.
+
+Als Benutzer möchte ich Karten ziehen und halten können,
+damit ich selbst entscheiden kann wie ich spiele.
+Die Punkte sollen automatisch berechnet werden damit keine fehler passieren.
+
+Als Benutzer möchte ich meinen aktuellen Chip stand sehen können,
+damit ich weiß wie viele Chips ich noch besitze.
+Gewinne und Verluste sollen direkt aktualisiert werden.
+
+Als Benutzer möchte ich meinen Spielstand speichern können,
+damit ich später weiter spielen kann ohne alles neu machen zu müssen.
+Die Daten sollen automatisch in der Datenbank gespeichert werden.
+
+Als Benutzer möchte ich Fehlermeldungen angezeigt bekommen,
+damit ich weiß warum etwas nicht funktioniert hat.
+Das programm soll bei falschen eingaben nicht abstürzen.
+
+Als Benutzer möchte ich das Spiel in verschiedenen Fenstergrößen verwenden können,
+damit das programm auf jedem Bildschirm ordentlich aussieht.
+Die Oberfläche soll sich automatisch anpassen.
+
+Als Benutzer möchte ich das Kartendeck gemischt verwenden können,
+damit jedes Spiel unterschiedlich ist und fair bleibt.
+Die Karten sollen zufällig verteilt werden.
