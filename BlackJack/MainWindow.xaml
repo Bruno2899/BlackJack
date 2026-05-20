@@ -22,7 +22,7 @@
 
             <TextBlock Text="Guthaben: 1.000,00€"
                        FontSize="22"
-                       Foreground="LightGreen"
+                       Foreground="green"
                        HorizontalAlignment="Center"
                        Margin="0,0,0,30"/>
 

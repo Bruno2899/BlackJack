@@ -5,7 +5,7 @@
         Height="550"
         Width="800"
         WindowStartupLocation="CenterScreen"
-        Background="#1E1E1E">
+        Background="black">
 
     <Grid>
 
@@ -33,7 +33,6 @@
                 <Image Source="/Fotos/play.jpg"
                        Height="130"
                        Width="300"
-                       Stretch="Uniform"
                        Margin="0,0,0,15"/>
 
                 <TextBlock Text="BLACKJACK.exe"
@@ -53,25 +52,25 @@
          FontSize="16"
          Background="White"
          BorderBrush="black"
-         BorderThickness="1"/>
+         BorderThickness="2"/>
 
                 <TextBlock Text="Passwort"
            Foreground="White"
            FontSize="14"/>
 
-                <PasswordBox x:Name="PasswordBox"
+                <PasswordBox x:Name="PasswortBox"
              Height="35"
              Margin="0,5,0,25"
              FontSize="16"
              Background="White"
              BorderBrush="Black"
-             BorderThickness="1"/>
+             BorderThickness="2"/>
 
                 <Button Content="Login"
                         Height="40"
                         FontSize="16"
                         FontWeight="Bold"
-                        Background="#4CAF50"
+                        Background="green"
                         Foreground="White"
                         Click="LoginButton_Click"/>
 

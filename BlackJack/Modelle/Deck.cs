@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace BlackJack.Modelle
 {
-    internal class Deck
+    public class Deck
     {
+        public int Id { get; set; }
+
+        public int AnzahlKarten { get; set; }
     }
 }

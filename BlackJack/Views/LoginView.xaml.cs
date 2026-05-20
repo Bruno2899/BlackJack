@@ -12,9 +12,9 @@ namespace BlackJack.Views
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameBox.Text;
-            string password = PasswordBox.Password;
+            string userpasswort = PasswortBox.Password;
 
-            if (username == "Bruno" && password == "Bruno")
+            if (username == "Bruno" && userpasswort == "Bruno")
             {
                 MessageBox.Show("Login erfolgreich!");
 
