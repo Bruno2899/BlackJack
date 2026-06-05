@@ -1,6 +1,7 @@
 using Prism.Events;
 using System.Windows.Input;
 using BlackJack.Common;
+using BlackJack.Events;
 
 namespace BlackJack.ViewModels
 {
@@ -39,8 +40,9 @@ namespace BlackJack.ViewModels
 
         private void StartGameExecute(object parameter)
         {
-            System.Windows.MessageBox.Show(
-                "Spiel starten funktioniert");
+            EventAggregator
+                .GetEvent<GameStartEvent>()
+                .Publish();
         }
     }
 }

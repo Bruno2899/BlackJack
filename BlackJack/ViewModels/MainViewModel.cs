@@ -47,6 +47,10 @@ namespace BlackJack.ViewModels
             EventAggregator
                 .GetEvent<GameStartEvent>()
                 .Subscribe(OpenGame);
+
+            EventAggregator
+                .GetEvent<BackToDashboardEvent>()
+                .Subscribe(OpenDashboard);
         }
 
         public UserControl CurrentView
@@ -72,6 +76,9 @@ namespace BlackJack.ViewModels
 
         private void OpenGame()
         {
+            System.Windows.MessageBox.Show(
+                "Blackjack Event angekommen");
+
             CurrentView = _blackjackView;
         }
     }
