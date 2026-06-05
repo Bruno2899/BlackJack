@@ -1,25 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace BlackJack.Views
 {
-    /// <summary>
-    /// Interaction logic for DashboardView.xaml
-    /// </summary>
-    public partial class DashboardView : Window
+    public partial class DashboardView : UserControl
     {
         public DashboardView()
         {
             InitializeComponent();
+
+            Loaded += DashboardView_Loaded;
+        }
+
+        private void DashboardView_Loaded(
+            object sender,
+            RoutedEventArgs e)
+        {
+            MessageBox.Show(
+                DataContext == null
+                ? "Dashboard DataContext NULL"
+                : "Dashboard DataContext OK");
         }
     }
 }

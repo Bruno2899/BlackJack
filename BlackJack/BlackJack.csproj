@@ -9,8 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Fotos\play.jpg" />
-    <None Remove="Fotos\start.png" />
+    <Compile Remove="Fotos\**" />
+    <EmbeddedResource Remove="Fotos\**" />
+    <None Remove="Fotos\**" />
+    <Page Remove="Fotos\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,15 +26,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Fotos\play.jpg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Fotos\start.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
+    <PackageReference Include="Prism.Core" Version="9.0.537" />
   </ItemGroup>
 
 </Project>

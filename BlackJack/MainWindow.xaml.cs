@@ -1,5 +1,7 @@
 ﻿using System.Windows;
-using BlackJack.Views;
+using Prism.Events;
+using BlackJack.ViewModels;
+
 namespace BlackJack
 {
     public partial class MainWindow : Window
@@ -7,22 +9,13 @@ namespace BlackJack
         public MainWindow()
         {
             InitializeComponent();
-        }
 
-        private void StartGame_Click(object sender, RoutedEventArgs e)
-        {
-            BlackjackView blackjack = new BlackjackView();
-            blackjack.Show();
+            IEventAggregator eventAggregator =
+                new EventAggregator();
 
-            this.Close();
-        }
+            DataContext =
+                new MainViewModel(eventAggregator);
 
-        private void Logout_Click(object sender, RoutedEventArgs e)
-        {
-            LoginView login = new LoginView();
-            login.Show();
-
-            this.Close();
         }
     }
 }
