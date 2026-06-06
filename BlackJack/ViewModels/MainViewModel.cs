@@ -11,18 +11,15 @@ namespace BlackJack.ViewModels
 
         private LoginView _loginView;
         private DashboardView _dashboardView;
-        private BlackjackView _blackjackView;
-
-        public MainViewModel(IEventAggregator eventAggregator): base(eventAggregator)
+        
+        public MainViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
         {
             _loginView = new LoginView();
             _loginView.DataContext = new LoginViewModel(EventAggregator);
 
             _dashboardView = new DashboardView();
             _dashboardView.DataContext = new DashboardViewModel(EventAggregator);
-       
-            _blackjackView = new BlackjackView();
-            _blackjackView.DataContext = new BlackJackViewModel(EventAggregator);
+
 
             CurrentView = _loginView;
 
@@ -31,6 +28,10 @@ namespace BlackJack.ViewModels
             EventAggregator.GetEvent<GameStartEvent>().Subscribe(OpenGame);
 
             EventAggregator.GetEvent<BackToDashboardEvent>().Subscribe(OpenDashboard);
+
+            EventAggregator.GetEvent<OpenStatistikEvent>().Subscribe(OpenStatistik);
+
+            EventAggregator.GetEvent<BackFromStatistikEvent>().Subscribe(OpenDashboard);
         }
 
         public UserControl CurrentView
@@ -53,7 +54,20 @@ namespace BlackJack.ViewModels
 
         private void OpenGame()
         {
-            CurrentView = _blackjackView;
+            BlackjackView blackjackView =new BlackjackView();
+
+            blackjackView.DataContext =new BlackJackViewModel(EventAggregator);
+
+            CurrentView = blackjackView;
+        }
+
+        private void OpenStatistik()
+        {
+            StatistikView statistikView =new StatistikView();
+
+            statistikView.DataContext =new StatistikViewModel(EventAggregator);
+
+            CurrentView = statistikView;
         }
     }
 }

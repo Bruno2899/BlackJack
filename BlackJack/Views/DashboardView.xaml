@@ -16,8 +16,12 @@
         Width="200"
         Height="50"
         Command="{Binding StartGameCommand}"/>
-
-		</StackPanel>
+            <Button Content="Statistik"
+                    Margin="20"
+        Width="100"
+        Height="50"
+        Command="{Binding StatistikCommand}"/>
+        </StackPanel>
 
 	</Grid>
 

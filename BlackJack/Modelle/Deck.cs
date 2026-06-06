@@ -3,9 +3,6 @@ using System.Collections.Generic;
 
 namespace BlackJack.Modelle
 {
-   // public int Id { get; set; }
-    //public string Name { get; set; }
-    //public int AnzahlKarten { get; set; }
     public class Deck
     {
         public List<Karten> KartenDeck
@@ -40,7 +37,7 @@ namespace BlackJack.Modelle
                     KartenDeck.Add(new Karten
                     {
                         Art = farbe,
-                        Beschreibung = i.ToString(),
+                        Beschreibung = Convert.ToString(i),
                         Wert = i
                     });
                 }

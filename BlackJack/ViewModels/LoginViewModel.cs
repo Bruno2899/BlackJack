@@ -12,10 +12,10 @@ namespace BlackJack.ViewModels
         private string _username;
         private string _password;
 
-        public LoginViewModel(IEventAggregator eventAggregator): base(eventAggregator)
+        public LoginViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
         {
-            LoginCommand = new ActionCommand(LoginCommandExecute,LoginCommandCanExecute);
-            RegisterCommand = new ActionCommand(RegisterCommandExecute,RegisterCommandCanExecute);
+            LoginCommand = new ActionCommand(LoginCommandExecute, LoginCommandCanExecute);
+            RegisterCommand = new ActionCommand(RegisterCommandExecute, RegisterCommandCanExecute);
         }
 
         public string Username
@@ -61,16 +61,19 @@ namespace BlackJack.ViewModels
 
         private void LoginCommandExecute(object parameter)
         {
-            
+
 
             using (BlackJackDB_Context db = new BlackJackDB_Context())
             {
-                
+
                 User user = db.Users.FirstOrDefault(u => u.Username == Username && u.PasswordHash == Password);
 
                 if (user != null)
                 {
                     CurrentUser.User = user;
+                    ////////////////////////////////////////////////////////////////////
+                    System.Windows.MessageBox.Show(CurrentUser.User.Balance.ToString());
+
 
                     System.Windows.MessageBox.Show("Willkommen " + user.Username);
 

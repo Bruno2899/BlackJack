@@ -16,13 +16,25 @@ namespace BlackJack.ViewModels
         private string _spielStatus;
         private decimal _guthaben;
         private bool _spielBeendet;
+        private decimal _einsatz;
 
         private Deck _deck;
 
         private List<Karten> _spielerHand;
         private List<Karten> _dealerHand;
         private string _dealerKartenAufdecken;
-
+        public decimal Einsatz
+        {
+            get
+            {
+                return _einsatz;
+            }
+            set
+            {
+                _einsatz = value;
+                OnPropertyChanged(nameof(Einsatz));
+            }
+        }
         public string DealerKartenAufdecken
         {
             get
@@ -105,20 +117,48 @@ namespace BlackJack.ViewModels
 
         public ICommand NeueRundeCommand { get; private set; }
 
-        public BlackJackViewModel(IEventAggregator eventAggregator): base(eventAggregator)
+        public ICommand Plus1Command
         {
+            get;
+            private set;
+        }
+
+        public ICommand Minus1Command
+        {
+            get;
+            private set;
+        }
+
+        public BlackJackViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
+        {
+            
             _spielerHand = new List<Karten>();
             _dealerHand = new List<Karten>();
 
+            if (CurrentUser.User != null)
+            {
+                Guthaben = CurrentUser.User.Balance;
+            }
+
             NeueRundeStarten();
-            
-            HitCommand = new ActionCommand(HitExecute,HitCanExecute);
 
-            StandCommand = new ActionCommand(StandExecute,StandCanExecute);
+            HitCommand = new ActionCommand(HitExecute, HitCanExecute);
 
-            BackCommand = new ActionCommand(BackExecute,BackCanExecute);
+            StandCommand = new ActionCommand(StandExecute, StandCanExecute);
 
-            NeueRundeCommand = new ActionCommand(NeueRundeExecute,NeueRundeCanExecute);
+            BackCommand = new ActionCommand(BackExecute, BackCanExecute);
+
+            NeueRundeCommand = new ActionCommand(NeueRundeExecute, NeueRundeCanExecute);
+
+            Plus1Command =
+    new ActionCommand(
+        Plus1Execute,
+        Plus1CanExecute);
+
+            Minus1Command =
+                new ActionCommand(
+                    Minus1Execute,
+                    Minus1CanExecute);
         }
 
         private bool HitCanExecute(object parameter)
@@ -140,6 +180,17 @@ namespace BlackJack.ViewModels
         {
             return true;
         }
+        private bool Plus1CanExecute(
+    object parameter)
+        {
+            return true;
+        }
+
+        private bool Minus1CanExecute(
+            object parameter)
+        {
+            return true;
+        }
 
         private void NeueRundeExecute(object parameter)
         {
@@ -148,7 +199,17 @@ namespace BlackJack.ViewModels
 
         private void NeueRundeStarten()
         {
-            _spielBeendet=false;
+            
+            if (Guthaben < Einsatz)
+            {
+                SpielStatus = "Zu wenig Guthaben";
+                return;
+            }
+            if (Einsatz < 1)
+            {
+                Einsatz = 1;
+            }
+            _spielBeendet = false;
             _deck = new Deck();
 
             _spielerHand.Clear();
@@ -162,10 +223,7 @@ namespace BlackJack.ViewModels
 
             SpielStatus = "Spiel läuft";
 
-            if (CurrentUser.User != null)
-            {
-                Guthaben = CurrentUser.User.Balance;
-            }
+            
             AktualisiereAnzeige();
         }
 
@@ -175,8 +233,7 @@ namespace BlackJack.ViewModels
             {
                 return;
             }
-            _spielerHand.Add(
-            _deck.ZieheKarte());
+            _spielerHand.Add(_deck.ZieheKarte());
 
             AktualisiereAnzeige();
 
@@ -184,11 +241,11 @@ namespace BlackJack.ViewModels
             {
                 _spielBeendet = true;
 
-                Guthaben -= 100;
+                Guthaben -= Einsatz;
 
                 CurrentUser.User.Balance = Guthaben;
 
-                SpielSpeichern(-100, false);
+                SpielSpeichern(Einsatz, false);
 
                 SpielStatus = "Bust! Über 21!";
             }
@@ -208,7 +265,7 @@ namespace BlackJack.ViewModels
             while (DealerPunkte < 17)
             {
                 _dealerHand.Add(
-                    _deck.ZieheKarte());
+                _deck.ZieheKarte());
 
                 AktualisiereAnzeige();
             }
@@ -301,33 +358,33 @@ namespace BlackJack.ViewModels
             _spielBeendet = true;
             if (DealerPunkte > 21)
             {
-                Guthaben += 100;
+                Guthaben += Einsatz;
 
                 CurrentUser.User.Balance = Guthaben;
 
-                SpielSpeichern(100, true);
+                SpielSpeichern(Einsatz, true);
 
                 SpielStatus = "Dealer hat verloren!";
-                return; 
+                return;
             }
 
             if (SpielerPunkte > DealerPunkte)
             {
-                Guthaben += 100;
+                Guthaben += Einsatz;
 
                 CurrentUser.User.Balance = Guthaben;
 
-                SpielSpeichern(100, true);
+                SpielSpeichern(Einsatz, true);
 
                 SpielStatus = "Du hast gewonnen!";
             }
             else if (SpielerPunkte < DealerPunkte)
             {
-                Guthaben -= 100;
+                Guthaben -= Einsatz;
 
                 CurrentUser.User.Balance = Guthaben;
 
-                SpielSpeichern(-100, false);
+                SpielSpeichern(Einsatz, false);
 
                 SpielStatus = "Dealer gewinnt!";
             }
@@ -336,19 +393,32 @@ namespace BlackJack.ViewModels
                 SpielStatus = "Unentschieden!";
             }
         }
-        
-        private void SpielSpeichern(
-    decimal gewinnVerlust,
-    bool gewonnen)
+
+        private void Plus1Execute(
+    object parameter)
         {
-            using (BlackJackDB_Context db =new BlackJackDB_Context())
+            Einsatz += 1;
+        }
+
+        private void Minus1Execute(
+            object parameter)
+        {
+            if (Einsatz > 1)
+            {
+                Einsatz -= 1;
+            }
+        }
+
+        private void SpielSpeichern(decimal gewinnVerlust, bool gewonnen)
+        {
+            using (BlackJackDB_Context db = new BlackJackDB_Context())
             {
                 User user = db.Users.FirstOrDefault(u => u.Id == CurrentUser.User.Id);
 
                 if (user != null)
                 {
                     user.Balance = Guthaben;
-
+                    
                     db.SpielStatistiken.Add(new SpielStatistik
                     {
                         UserId = user.Id,
