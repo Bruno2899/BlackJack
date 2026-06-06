@@ -13,44 +13,24 @@ namespace BlackJack.ViewModels
         private DashboardView _dashboardView;
         private BlackjackView _blackjackView;
 
-        public MainViewModel(IEventAggregator eventAggregator)
-            : base(eventAggregator)
+        public MainViewModel(IEventAggregator eventAggregator): base(eventAggregator)
         {
             _loginView = new LoginView();
-            _loginView.DataContext =
-                new LoginViewModel(EventAggregator);
+            _loginView.DataContext = new LoginViewModel(EventAggregator);
 
             _dashboardView = new DashboardView();
-            _dashboardView.DataContext =
-                new DashboardViewModel(EventAggregator);
-            ////////////////////////////////////////////
-           System.Windows.MessageBox.Show(
-            _dashboardView.DataContext == null
-            ? "Dashboard DC NULL"
-            : "Dashboard DC OK");
-
+            _dashboardView.DataContext = new DashboardViewModel(EventAggregator);
+       
             _blackjackView = new BlackjackView();
-            _blackjackView.DataContext =
-                new BlackJackViewModel(EventAggregator);
+            _blackjackView.DataContext = new BlackJackViewModel(EventAggregator);
 
             CurrentView = _loginView;
 
-            System.Windows.MessageBox.Show(
-    CurrentView == null
-    ? "CurrentView NULL"
-    : CurrentView.GetType().Name);
+            EventAggregator.GetEvent<LoginSuccessEvent>().Subscribe(OpenDashboard);
 
-            EventAggregator
-                .GetEvent<LoginSuccessEvent>()
-                .Subscribe(OpenDashboard);
+            EventAggregator.GetEvent<GameStartEvent>().Subscribe(OpenGame);
 
-            EventAggregator
-                .GetEvent<GameStartEvent>()
-                .Subscribe(OpenGame);
-
-            EventAggregator
-                .GetEvent<BackToDashboardEvent>()
-                .Subscribe(OpenDashboard);
+            EventAggregator.GetEvent<BackToDashboardEvent>().Subscribe(OpenDashboard);
         }
 
         public UserControl CurrentView
@@ -68,17 +48,11 @@ namespace BlackJack.ViewModels
 
         private void OpenDashboard()
         {
-            System.Windows.MessageBox.Show(
-                "Dashboard Event angekommen");
-
             CurrentView = _dashboardView;
         }
 
         private void OpenGame()
         {
-            System.Windows.MessageBox.Show(
-                "Blackjack Event angekommen");
-
             CurrentView = _blackjackView;
         }
     }

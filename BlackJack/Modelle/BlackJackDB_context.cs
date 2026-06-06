@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BlackJack.Modelle;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlackJack.Modelle
 {
@@ -8,10 +9,10 @@ namespace BlackJack.Modelle
 
         public DbSet<Karten> Karten { get; set; }
 
+        public DbSet<SpielStatistik> SpielStatistiken{ get; set;}
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(
-                "Server=db54854.public.databaseasp.net;Database=db54854;User Id=db54854;Password=WerdasWeiß;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Server=db54854.public.databaseasp.net;Database=db54854;User Id=db54854;Password=WerdasWeiß;TrustServerCertificate=True;");
         }
     }
 }

@@ -14,8 +14,6 @@ namespace BlackJack.ViewModels
 
         public LoginViewModel(IEventAggregator eventAggregator): base(eventAggregator)
         {
-            System.Windows.MessageBox.Show("LoginViewModel erstellt");
-
             LoginCommand = new ActionCommand(LoginCommandExecute,LoginCommandCanExecute);
             RegisterCommand = new ActionCommand(RegisterCommandExecute,RegisterCommandCanExecute);
         }
@@ -65,8 +63,7 @@ namespace BlackJack.ViewModels
         {
             
 
-            using (BlackJackDB_Context db =
-                new BlackJackDB_Context())
+            using (BlackJackDB_Context db = new BlackJackDB_Context())
             {
                 
                 User user = db.Users.FirstOrDefault(u => u.Username == Username && u.PasswordHash == Password);
@@ -75,17 +72,13 @@ namespace BlackJack.ViewModels
                 {
                     CurrentUser.User = user;
 
-                    System.Windows.MessageBox.Show(
-                        "Willkommen " + user.Username);
+                    System.Windows.MessageBox.Show("Willkommen " + user.Username);
 
-                    EventAggregator
-                        .GetEvent<LoginSuccessEvent>()
-                        .Publish();
+                    EventAggregator.GetEvent<LoginSuccessEvent>().Publish();
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show(
-                        "Falscher Benutzername oder Passwort");
+                    System.Windows.MessageBox.Show("Falscher Benutzername oder Passwort");
                 }
             }
         }
@@ -95,8 +88,7 @@ namespace BlackJack.ViewModels
         }
         private void RegisterCommandExecute(object parameter)
         {
-            using (BlackJackDB_Context db =
-                new BlackJackDB_Context())
+            using (BlackJackDB_Context db = new BlackJackDB_Context())
             {
                 User vorhandenerUser = db.Users.FirstOrDefault(u => u.Username == Username);
 
@@ -118,8 +110,7 @@ namespace BlackJack.ViewModels
 
                 db.SaveChanges();
 
-                System.Windows.MessageBox.Show(
-                    "Registrierung erfolgreich");
+                System.Windows.MessageBox.Show("Registrierung erfolgreich");
                 CurrentUser.User = neuerUser;
 
                 EventAggregator.GetEvent<LoginSuccessEvent>().Publish();

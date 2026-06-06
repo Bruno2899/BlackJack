@@ -10,11 +10,9 @@ namespace BlackJack
         {
             InitializeComponent();
 
-            IEventAggregator eventAggregator =
-                new EventAggregator();
+            IEventAggregator eventAggregator = new EventAggregator();
 
-            DataContext =
-                new MainViewModel(eventAggregator);
+            DataContext = new MainViewModel(eventAggregator);
 
         }
     }

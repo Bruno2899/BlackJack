@@ -12,14 +12,9 @@ namespace BlackJack.Views
             Loaded += DashboardView_Loaded;
         }
 
-        private void DashboardView_Loaded(
-            object sender,
-            RoutedEventArgs e)
+        private void DashboardView_Loaded(object sender,RoutedEventArgs e)
         {
-            MessageBox.Show(
-                DataContext == null
-                ? "Dashboard DataContext NULL"
-                : "Dashboard DataContext OK");
+            
         }
     }
 }

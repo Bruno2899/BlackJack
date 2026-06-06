@@ -4,10 +4,6 @@ namespace BlackJack.Common
 {
     public static class CurrentUser
     {
-        public static User User
-        {
-            get;
-            set;
-        }
+        public static User User {get; set;}
     }
 }

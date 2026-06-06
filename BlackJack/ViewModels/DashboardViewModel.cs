@@ -7,24 +7,9 @@ namespace BlackJack.ViewModels
 {
     public class DashboardViewModel : ViewModelBase
     {
-        /*
-        public DashboardViewModel(IEventAggregator eventAggregator)
-            : base(eventAggregator)
+        public DashboardViewModel(IEventAggregator eventAggregator): base(eventAggregator)
         {
-            StartGameCommand =
-                new ActionCommand(
-                    StartGameExecute,
-                    StartGameCanExecute);
-        }*/
-        public DashboardViewModel(IEventAggregator eventAggregator)
-    : base(eventAggregator)
-        {
-            System.Windows.MessageBox.Show("DashboardViewModel erstellt");
-
-            StartGameCommand =
-                new ActionCommand(
-                    StartGameExecute,
-                    StartGameCanExecute);
+            StartGameCommand = new ActionCommand(StartGameExecute, StartGameCanExecute);
         }
 
         public ICommand StartGameCommand
@@ -40,9 +25,7 @@ namespace BlackJack.ViewModels
 
         private void StartGameExecute(object parameter)
         {
-            EventAggregator
-                .GetEvent<GameStartEvent>()
-                .Publish();
+            EventAggregator.GetEvent<GameStartEvent>().Publish();
         }
     }
 }

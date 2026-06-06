@@ -3,8 +3,8 @@ using BlackJack.Events;
 using BlackJack.Modelle;
 using Prism.Events;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
-
 namespace BlackJack.ViewModels
 {
     public class BlackJackViewModel : ViewModelBase
@@ -15,12 +15,26 @@ namespace BlackJack.ViewModels
         private int _dealerPunkte;
         private string _spielStatus;
         private decimal _guthaben;
+        private bool _spielBeendet;
 
         private Deck _deck;
 
         private List<Karten> _spielerHand;
         private List<Karten> _dealerHand;
+        private string _dealerKartenAufdecken;
 
+        public string DealerKartenAufdecken
+        {
+            get
+            {
+                return _dealerKartenAufdecken;
+            }
+            set
+            {
+                _dealerKartenAufdecken = value;
+                OnPropertyChanged(nameof(DealerKartenAufdecken));
+            }
+        }
         public string SpielerKarten
         {
             get { return _spielerKarten; }
@@ -97,7 +111,7 @@ namespace BlackJack.ViewModels
             _dealerHand = new List<Karten>();
 
             NeueRundeStarten();
-
+            
             HitCommand = new ActionCommand(HitExecute,HitCanExecute);
 
             StandCommand = new ActionCommand(StandExecute,StandCanExecute);
@@ -134,6 +148,7 @@ namespace BlackJack.ViewModels
 
         private void NeueRundeStarten()
         {
+            _spielBeendet=false;
             _deck = new Deck();
 
             _spielerHand.Clear();
@@ -147,11 +162,19 @@ namespace BlackJack.ViewModels
 
             SpielStatus = "Spiel läuft";
 
+            if (CurrentUser.User != null)
+            {
+                Guthaben = CurrentUser.User.Balance;
+            }
             AktualisiereAnzeige();
         }
 
         private void HitExecute(object parameter)
         {
+            if (_spielBeendet)
+            {
+                return;
+            }
             _spielerHand.Add(
             _deck.ZieheKarte());
 
@@ -159,16 +182,33 @@ namespace BlackJack.ViewModels
 
             if (SpielerPunkte > 21)
             {
+                _spielBeendet = true;
+
+                Guthaben -= 100;
+
+                CurrentUser.User.Balance = Guthaben;
+
+                SpielSpeichern(-100, false);
+
                 SpielStatus = "Bust! Über 21!";
             }
         }
 
         private void StandExecute(object parameter)
         {
+            if (_spielBeendet)
+            {
+                return;
+            }
+
+            _spielBeendet = true;
+
+            AktualisiereAnzeige();
+
             while (DealerPunkte < 17)
             {
                 _dealerHand.Add(
-                _deck.ZieheKarte());
+                    _deck.ZieheKarte());
 
                 AktualisiereAnzeige();
             }
@@ -191,6 +231,7 @@ namespace BlackJack.ViewModels
 
             int anzahlAsse = 0;
 
+
             foreach (Karten karte in _spielerHand)
             {
                 SpielerKarten += karte.Beschreibung + " ";
@@ -211,9 +252,25 @@ namespace BlackJack.ViewModels
 
             int dealerAsse = 0;
 
-            foreach (Karten karte in _dealerHand)
+            for (int i = 0; i < _dealerHand.Count; i++)
             {
-                DealerKarten += karte.Beschreibung + " ";
+                Karten karte = _dealerHand[i];
+
+                if (!_spielBeendet)
+                {
+                    if (i == 0)
+                    {
+                        DealerKarten += karte.Beschreibung + " ";
+                    }
+                    else
+                    {
+                        DealerKarten += "? ";
+                    }
+                }
+                else
+                {
+                    DealerKarten += karte.Beschreibung + " ";
+                }
 
                 DealerPunkte += karte.Wert;
 
@@ -228,27 +285,78 @@ namespace BlackJack.ViewModels
                 DealerPunkte -= 10;
                 dealerAsse--;
             }
+
+            if (_spielBeendet)
+            {
+                DealerKartenAufdecken = Convert.ToString(DealerPunkte);
+            }
+            else
+            {
+                DealerKartenAufdecken = "?";
+            }
         }
 
         private void GewinnerRechner()
         {
+            _spielBeendet = true;
             if (DealerPunkte > 21)
             {
+                Guthaben += 100;
+
+                CurrentUser.User.Balance = Guthaben;
+
+                SpielSpeichern(100, true);
+
                 SpielStatus = "Dealer hat verloren!";
-                return;
+                return; 
             }
 
             if (SpielerPunkte > DealerPunkte)
             {
+                Guthaben += 100;
+
+                CurrentUser.User.Balance = Guthaben;
+
+                SpielSpeichern(100, true);
+
                 SpielStatus = "Du hast gewonnen!";
             }
             else if (SpielerPunkte < DealerPunkte)
             {
+                Guthaben -= 100;
+
+                CurrentUser.User.Balance = Guthaben;
+
+                SpielSpeichern(-100, false);
+
                 SpielStatus = "Dealer gewinnt!";
             }
             else
             {
                 SpielStatus = "Unentschieden!";
+            }
+        }
+        
+        private void SpielSpeichern(
+    decimal gewinnVerlust,
+    bool gewonnen)
+        {
+            using (BlackJackDB_Context db =new BlackJackDB_Context())
+            {
+                User user = db.Users.FirstOrDefault(u => u.Id == CurrentUser.User.Id);
+
+                if (user != null)
+                {
+                    user.Balance = Guthaben;
+
+                    db.SpielStatistiken.Add(new SpielStatistik
+                    {
+                        UserId = user.Id,
+                        GewinnVerlust = gewinnVerlust,
+                        Gewonnen = gewonnen
+                    });
+                    db.SaveChanges();
+                }
             }
         }
     }

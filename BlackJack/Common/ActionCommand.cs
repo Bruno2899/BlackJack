@@ -9,16 +9,13 @@ namespace BlackJack.Common
 
         private readonly Func<object, bool> handlerCanExecute;
 
-        public ActionCommand(
-            Action<object> execute,
-            Func<object, bool> canExecute)
+        public ActionCommand(Action<object> execute,Func<object, bool> canExecute)
         {
-            this.handlerExecute = execute
-                ?? throw new ArgumentNullException(
-                    "Execute cannot be null");
+            this.handlerExecute = execute?? throw new ArgumentNullException("Execute cannot be null");
 
             this.handlerCanExecute = canExecute;
         }
+
 
         public event EventHandler CanExecuteChanged
         {

@@ -37,56 +37,49 @@ namespace BlackJack.Modelle
             {
                 for (int i = 2; i <= 10; i++)
                 {
-                    KartenDeck.Add(
-                        new Karten
-                        {
-                            Art = farbe,
-                            Beschreibung = i.ToString(),
-                            Wert = i
-                        });
+                    KartenDeck.Add(new Karten
+                    {
+                        Art = farbe,
+                        Beschreibung = i.ToString(),
+                        Wert = i
+                    });
                 }
 
-                KartenDeck.Add(
-                    new Karten
-                    {
-                        Art = farbe,
-                        Beschreibung = "Bube",
-                        Wert = 10
-                    });
+                KartenDeck.Add(new Karten
+                {
+                    Art = farbe,
+                    Beschreibung = "Bube",
+                    Wert = 10
+                });
 
-                KartenDeck.Add(
-                    new Karten
-                    {
-                        Art = farbe,
-                        Beschreibung = "Dame",
-                        Wert = 10
-                    });
+                KartenDeck.Add(new Karten
+                {
+                    Art = farbe,
+                    Beschreibung = "Dame",
+                    Wert = 10
+                });
 
-                KartenDeck.Add(
-                    new Karten
-                    {
-                        Art = farbe,
-                        Beschreibung = "König",
-                        Wert = 10
-                    });
+                KartenDeck.Add(new Karten
+                {
+                    Art = farbe,
+                    Beschreibung = "König",
+                    Wert = 10
+                });
 
-                KartenDeck.Add(
-                    new Karten
-                    {
-                        Art = farbe,
-                        Beschreibung = "Ass",
-                        Wert = 11
-                    });
+                KartenDeck.Add(new Karten
+                {
+                    Art = farbe,
+                    Beschreibung = "Ass",
+                    Wert = 11
+                });
             }
         }
 
         public Karten ZieheKarte()
         {
-            int index =
-                random.Next(KartenDeck.Count);
+            int index =random.Next(KartenDeck.Count);
 
-            Karten karte =
-                KartenDeck[index];
+            Karten karte =KartenDeck[index];
 
             KartenDeck.RemoveAt(index);
 

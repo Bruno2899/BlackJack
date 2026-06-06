@@ -10,8 +10,7 @@ namespace BlackJack.Common
         {
             if (this.PropertyChanged != null)
             {
-                this.PropertyChanged(this,
-                    new PropertyChangedEventArgs(property));
+                this.PropertyChanged(this,new PropertyChangedEventArgs(property));
             }
         }
     }
