@@ -15,33 +15,34 @@
                        Foreground="White"
                        HorizontalAlignment="Center"/>
             <TextBlock Text="Dealer"
-           FontSize="24"
-           Foreground="White"
-           HorizontalAlignment="Center"/>
+                       FontSize="24"
+                       Foreground="White"
+                       HorizontalAlignment="Center"/>
 
             <TextBlock Text="{Binding DealerKarten}"
-           FontSize="20"
-           Foreground="White"
-           Margin="0,10,0,30"
+                        FontSize="20"
+                        Foreground="White"
+                        Margin="0,10,0,30"
            HorizontalAlignment="Center"/>
             <TextBlock Text="{Binding DealerPunkte}"
-           FontSize="22"
+                        FontSize="22"
            Foreground="Yellow"
-           HorizontalAlignment="Center"
+                        HorizontalAlignment="Center"
            Margin="0,10,0,20"/>
-            <TextBlock Text="Spiel läuft..."
-                       FontSize="20"
-                       Foreground="White"
-                       Margin="0,20,0,20"
-                       HorizontalAlignment="Center"/>
-            <TextBlock Text="{Binding SpielerPunkte}"
-           FontSize="20"
-           Foreground="White"/>
-            <TextBlock Text="{Binding SpielerKarten}"
-           FontSize="20"
-           Foreground="White"
-           Margin="0,20,0,20"
+            <TextBlock Text="{Binding SpielStatus}"
+                        FontSize="20"
+                        Foreground="White"
+                        Margin="0,20,0,20"
            HorizontalAlignment="Center"/>
+            <TextBlock Text="{Binding SpielerPunkte}"
+                        FontSize="20"
+                        Foreground="White"/>
+            
+            <TextBlock Text="{Binding SpielerKarten}"
+                        FontSize="20"
+                        Foreground="White"
+                        Margin="0,20,0,20"
+                        HorizontalAlignment="Center"/>
             
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center">
@@ -57,12 +58,19 @@
                         Height="50"
                         Margin="10"
                         Command="{Binding StandCommand}"/>
-
-                <Button Content="Back"
+                
+                <Button Content="Neue Runde"
                         Width="120"
                         Height="50"
                         Margin="10"
+                        Command="{Binding NeueRundeCommand}"/>
+
+                <Button Content="Back"
+                        Width="50"
+                        Height="50"
+                        Margin="10"
                         Command="{Binding BackCommand}"/>
+                
 
             </StackPanel>
 

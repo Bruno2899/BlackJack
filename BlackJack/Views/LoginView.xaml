@@ -33,15 +33,21 @@
 				<TextBlock Text="Passwort"
                            Foreground="White"/>
 
-				<PasswordBox x:Name="PasswortBox"
-                             Height="35"
-                             Margin="0,5,0,25"/>
+                <PasswordBox x:Name="PasswortBox"
+             Height="35"
+             Margin="0,5,0,25"
+             PasswordChanged="PasswortBox_PasswordChanged"/>
 
-				<Button Content="Login"
+                <Button Content="Login"
                         Height="40"
                         Command="{Binding LoginCommand}"/>
 
-			</StackPanel>
+                <Button Content="Registrieren"
+                        Height="30"
+                        Margin="40,100,40,0"
+                        Command="{Binding RegisterCommand}"/>
+
+            </StackPanel>
 
 		</Border>
 
