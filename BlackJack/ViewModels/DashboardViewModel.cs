@@ -11,18 +11,13 @@ namespace BlackJack.ViewModels
         {
             StartGameCommand = new ActionCommand(StartGameExecute, StartGameCanExecute);
             StatistikCommand = new ActionCommand(StatistikExecute, StatistikCanExecute);
+            
+            LogoutCommand =new ActionCommand(LogoutExecute, LogoutCanExecute);
         }
 
-        public ICommand StartGameCommand
-        {
-            get;
-            private set;
-        }
-        public ICommand StatistikCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand StartGameCommand{get; private set;}
+        public ICommand StatistikCommand{get; private set;}
+        public ICommand LogoutCommand{get; private set;}
 
         private bool StartGameCanExecute(object parameter)
         {
@@ -42,6 +37,16 @@ namespace BlackJack.ViewModels
             object parameter)
         {
             EventAggregator.GetEvent<OpenStatistikEvent>().Publish();
+        }
+        private bool LogoutCanExecute(object parameter)
+        {
+            return true;
+        }
+
+        private void LogoutExecute(object parameter)
+        {
+            CurrentUser.User = null;
+            EventAggregator.GetEvent<LogoutEvent>().Publish();
         }
     }
 }

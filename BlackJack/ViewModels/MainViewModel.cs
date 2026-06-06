@@ -32,6 +32,7 @@ namespace BlackJack.ViewModels
             EventAggregator.GetEvent<OpenStatistikEvent>().Subscribe(OpenStatistik);
 
             EventAggregator.GetEvent<BackFromStatistikEvent>().Subscribe(OpenDashboard);
+            EventAggregator.GetEvent<LogoutEvent>().Subscribe(OpenLogin);
         }
 
         public UserControl CurrentView
@@ -50,6 +51,10 @@ namespace BlackJack.ViewModels
         private void OpenDashboard()
         {
             CurrentView = _dashboardView;
+        }
+        private void OpenLogin()
+        {
+            CurrentView = _loginView;
         }
 
         private void OpenGame()

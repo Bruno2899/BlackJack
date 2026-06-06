@@ -71,11 +71,6 @@ namespace BlackJack.ViewModels
                 if (user != null)
                 {
                     CurrentUser.User = user;
-                    ////////////////////////////////////////////////////////////////////
-                    System.Windows.MessageBox.Show(CurrentUser.User.Balance.ToString());
-
-
-                    System.Windows.MessageBox.Show("Willkommen " + user.Username);
 
                     EventAggregator.GetEvent<LoginSuccessEvent>().Publish();
                 }

@@ -14,12 +14,26 @@ namespace BlackJack.ViewModels
         private double _winRate;
         private decimal _durchschnittGewinn;
         private decimal _groessterGewinn;
+        private string _ranking;
+
 
         public StatistikViewModel(
             IEventAggregator eventAggregator): base(eventAggregator)
         {
             StatistikLaden();
             BackCommand = new ActionCommand(BackExecute, BackCanExecute);
+        }
+        public string Ranking
+        {
+            get
+            {
+                return _ranking;
+            }
+            set
+            {
+                _ranking = value;
+                OnPropertyChanged(nameof(Ranking));
+            }
         }
 
         public int SpieleAnzahl
@@ -82,6 +96,7 @@ namespace BlackJack.ViewModels
             {
                 return;
             }
+            
             using (BlackJackDB_Context db = new BlackJackDB_Context())
             {
                 int userId = CurrentUser.User.Id;
@@ -100,8 +115,19 @@ namespace BlackJack.ViewModels
 
                     WinRate = spiele.Count(s => s.Gewonnen) * 100.0 / spiele.Count;
                 }
+
+
+                Ranking = "";
+
+                var top5 = db.Users.OrderByDescending(u => u.Balance).Take(5).ToList();
+
+                for (int i = 0; i < top5.Count; i++)
+                {
+                    Ranking += i+1 + ". "+ top5[i].Username+ " besitzt: " + top5[i].Balance + " €\n";
+                }
             }
         }
+        
         private bool BackCanExecute(object parameter)
         {
             return true;
