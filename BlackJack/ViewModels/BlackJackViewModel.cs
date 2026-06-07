@@ -4,6 +4,7 @@ using BlackJack.Modelle;
 using Prism.Events;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 namespace BlackJack.ViewModels
 {
@@ -153,6 +154,9 @@ namespace BlackJack.ViewModels
 
         public ICommand EinsatzMenueCommand { get; private set; }
 
+        public ICommand SpielInfoCommand {get; private set;}
+
+        public ICommand DoubleDownCommand{get; private set;}
         public BlackJackViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
         {
             
@@ -193,26 +197,39 @@ namespace BlackJack.ViewModels
             Minus10000Command = new ActionCommand(Minus10000Execute, Minus10000CanExecute);
 
             EinsatzMenueCommand = new ActionCommand(EinsatzMenueExecute, EinsatzMenueCanExecute);
+            DoubleDownCommand =new ActionCommand(DoubleDownExecute, DoubleDownCanExecute);
+            
+            SpielInfoCommand = new ActionCommand(SpielInfoExecute, SpielInfoCanExecute);
+        }
+        private bool SpielInfoCanExecute(object parameter)
+        {
+            return true;
         }
 
         private bool HitCanExecute(object parameter)
         {
-            return true;
+            return !_spielBeendet && _deck != null && Guthaben > 0;
         }
 
         private bool StandCanExecute(object parameter)
         {
-            return true;
+            return !_spielBeendet && _deck != null && Guthaben > 0;
         }
-
+        private bool DoubleDownCanExecute(object parameter)
+        {
+            return !_spielBeendet && _deck != null && Guthaben > 0;
+        }
         private bool BackCanExecute(object parameter)
         {
             return true;
         }
-
-        private bool NeueRundeCanExecute(object parameter)
+        private bool EinsatzMenueCanExecute(object parameter)
         {
             return true;
+        }
+        private bool NeueRundeCanExecute(object parameter)
+        {
+            return Guthaben > 0;
         }
         private void NeueRundeExecute(object parameter) 
         { 
@@ -235,11 +252,7 @@ namespace BlackJack.ViewModels
         private bool Minus1000CanExecute(object parameter) { return true; }
         private bool Minus5000CanExecute(object parameter) { return true; }
         private bool Minus10000CanExecute(object parameter) { return true; }
-
-        private bool EinsatzMenueCanExecute(object parameter)
-        {
-            return true;
-        }
+        
 
         private void NeueRundeStarten()
         {
@@ -268,6 +281,10 @@ namespace BlackJack.ViewModels
 
             
             AktualisiereAnzeige();
+            if (IstBlackJack())
+            {
+                GewinnerRechner();
+            }
         }
 
         private void HitExecute(object parameter)
@@ -276,8 +293,14 @@ namespace BlackJack.ViewModels
             {
                 return;
             }
+            if (_deck == null)
+            {
+                SpielStatus = "Keine aktive Runde!";
+                return;
+            }
+            HausverbotPruefen();
             _spielerHand.Add(_deck.ZieheKarte());
-
+            
             AktualisiereAnzeige();
 
             if (SpielerPunkte > 21)
@@ -399,6 +422,18 @@ namespace BlackJack.ViewModels
         private void GewinnerRechner()
         {
             _spielBeendet = true;
+            if (IstBlackJack())
+            {
+                Guthaben += Einsatz * 3;
+
+                CurrentUser.User.Balance = Guthaben;
+
+                SpielSpeichern(Einsatz * 3, true);
+
+                SpielStatus = "BLACKJACK! Einsatz x3 gewonnen!";
+
+                return;
+            }
             if (DealerPunkte > 21)
             {
                 Guthaben += Einsatz;
@@ -426,7 +461,8 @@ namespace BlackJack.ViewModels
                 Guthaben -= Einsatz;
 
                 CurrentUser.User.Balance = Guthaben;
-
+                HausverbotPruefen();
+                
                 SpielSpeichern(Einsatz, false);
 
                 SpielStatus = "Dealer gewinnt!";
@@ -436,9 +472,17 @@ namespace BlackJack.ViewModels
                 SpielStatus = "Unentschieden!";
             }
         }
+        private bool IstBlackJack()
+        {
+            return _spielerHand.Count == 2 && SpielerPunkte == 21;
+        }
 
         private void SpielSpeichern(decimal gewinnVerlust, bool gewonnen)
         {
+            if (CurrentUser.User == null)
+            {
+                return;
+            }
             using (BlackJackDB_Context db = new BlackJackDB_Context())
             {
                 User user = db.Users.FirstOrDefault(u => u.Id == CurrentUser.User.Id);
@@ -446,7 +490,7 @@ namespace BlackJack.ViewModels
                 if (user != null)
                 {
                     user.Balance = Guthaben;
-                    
+
                     db.SpielStatistiken.Add(new SpielStatistik
                     {
                         UserId = user.Id,
@@ -532,6 +576,78 @@ namespace BlackJack.ViewModels
             if (Einsatz - 10000 >= 1)
             {
                 Einsatz -= 10000;
+            }
+        }
+        private void DoubleDownExecute(object parameter)
+        {
+            if (_spielBeendet)
+            {
+                return;
+            }
+
+            Einsatz = Einsatz * 2;
+
+            _spielerHand.Add(_deck.ZieheKarte());
+
+            AktualisiereAnzeige();
+
+            if (SpielerPunkte > 21)
+            {
+                _spielBeendet = true;
+
+                Guthaben -= Einsatz;
+
+                CurrentUser.User.Balance = Guthaben;
+                HausverbotPruefen();
+                SpielSpeichern(-Einsatz, false);
+
+                SpielStatus = "Bust! Double Down verloren!";
+
+                return;
+            }
+
+            StandExecute(null);
+        }
+        private void SpielInfoExecute(object parameter)
+        {
+            MessageBox.Show(
+
+            "Hit:\nKarte ziehen\n\n" +
+
+            "Stand:\nZug beenden\n\n" +
+
+            "Double Down:\nEinsatz verdoppeln + eine neue Karte\n\n" +
+    
+            "Einsatz:\nEinsatz erhöhen oder verringern\n\n" +
+
+            "Neue Runde:\nNeues Spiel starten\n\n" +
+
+            "Gewinn/Verlust:\nWin; Einsatz*2 | Lose; -Einsatz\n\n" +
+
+            "Dealer:\nDie zweite Karte bleibt verdeckt",
+
+            "Spielhilfe");
+        }
+        private void HausverbotPruefen()
+        {
+            if (Guthaben < 0)
+            {
+                using (BlackJackDB_Context db = new BlackJackDB_Context())
+                {
+                    User user = db.Users.FirstOrDefault(u => u.Id == CurrentUser.User.Id);
+
+                    if (user != null)
+                    {
+                        user.IsBanned = true;
+                        db.SaveChanges();
+                    }
+                }
+
+                MessageBox.Show("Sie haben Hausverbot!\nDer Zugriff wurde gesperrt.", "Hausverbot", MessageBoxButton.OK, MessageBoxImage.Stop);
+
+                CurrentUser.User = null;
+
+                EventAggregator.GetEvent<LogoutEvent>().Publish();
             }
         }
     }

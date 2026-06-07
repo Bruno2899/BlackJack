@@ -9,5 +9,7 @@
         public string PasswordHash { get; set; } = "";
 
         public decimal Balance { get; set; } = 1000;
+
+        public bool IsBanned { get; set; }
     }
 }

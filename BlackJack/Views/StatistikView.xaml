@@ -25,6 +25,15 @@
                            Foreground="Gold"
                            HorizontalAlignment="Center"
                            Margin="0,0,0,30"/>
+                <Button Content="Help?"
+        Width="100"
+        Height="30"
+        Command="{Binding StatistikInfoCommand}"/>
+
+                <Button Content="Spielregeln"
+        Width="100"
+        Height="30"
+        Command="{Binding InfoCommand}"/>
 
                 <TextBlock Text="{Binding SpieleAnzahl,
                     StringFormat= Spiele: {0}}"
@@ -73,6 +82,7 @@
                         Command="{Binding BackCommand}"/>
 
             </StackPanel>
+            
 
         </Border>
 

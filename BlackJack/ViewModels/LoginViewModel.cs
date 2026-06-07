@@ -1,9 +1,10 @@
-using System.Windows.Input;
-using Prism.Events;
 using BlackJack.Common;
 using BlackJack.Events;
 using BlackJack.Modelle;
+using Prism.Events;
 using System.Linq;
+using System.Windows;
+using System.Windows.Input;
 
 namespace BlackJack.ViewModels
 {
@@ -61,13 +62,16 @@ namespace BlackJack.ViewModels
 
         private void LoginCommandExecute(object parameter)
         {
-
-
             using (BlackJackDB_Context db = new BlackJackDB_Context())
             {
 
                 User user = db.Users.FirstOrDefault(u => u.Username == Username && u.PasswordHash == Password);
+                if (user != null && user.IsBanned)
+                {
+                    MessageBox.Show("Sie haben Hausverbot!\nAnmeldung nicht möglich.", "Zugriff verweigert", MessageBoxButton.OK, MessageBoxImage.Stop);
 
+                    return;
+                }
                 if (user != null)
                 {
                     CurrentUser.User = user;

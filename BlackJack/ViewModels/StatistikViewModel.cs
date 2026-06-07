@@ -1,8 +1,9 @@
 ﻿using BlackJack.Common;
+using BlackJack.Events;
 using BlackJack.Modelle;
 using Prism.Events;
 using System.Linq;
-using BlackJack.Events;
+using System.Windows;
 using System.Windows.Input;
 
 namespace BlackJack.ViewModels
@@ -17,11 +18,12 @@ namespace BlackJack.ViewModels
         private string _ranking;
 
 
-        public StatistikViewModel(
-            IEventAggregator eventAggregator): base(eventAggregator)
+        public StatistikViewModel(IEventAggregator eventAggregator): base(eventAggregator)
         {
             StatistikLaden();
             BackCommand = new ActionCommand(BackExecute, BackCanExecute);
+            StatistikInfoCommand = new ActionCommand(StatistikInfoExecute, StatistikInfoCanExecute);
+            InfoCommand =new ActionCommand(InfoExecute, InfoCanExecute);
         }
         public string Ranking
         {
@@ -85,11 +87,9 @@ namespace BlackJack.ViewModels
                 OnPropertyChanged(nameof(GroessterGewinn));
             }
         }
-        public ICommand BackCommand
-        {
-            get;
-            private set;
-        }
+        public ICommand BackCommand{get; private set; } 
+        public ICommand StatistikInfoCommand{get; private set; }
+        public ICommand InfoCommand{get; private set;}
         private void StatistikLaden()
         {
             if (CurrentUser.User == null)
@@ -136,6 +136,52 @@ namespace BlackJack.ViewModels
         private void BackExecute(object parameter)
         {
             EventAggregator.GetEvent<BackFromStatistikEvent>().Publish();
+        }
+        private bool StatistikInfoCanExecute(object parameter)
+        {
+            return true;
+        }
+        private bool InfoCanExecute(object parameter)
+        {
+            return true;
+        }
+
+        private void StatistikInfoExecute(object parameter)
+        {
+            MessageBox.Show(
+
+        "Spiele:\nAnzahl aller gespielten Runden des Users\n\n" +
+
+        "Gesamtgewinn:\nSumme aller Gewinne und Verluste all time\n\n" +
+
+        "Win Rate:\nProzent der gewonnenen Spiele\n\n" +
+
+        "Durchschnitt:\nDurchschnittlicher Gewinn pro Spiel\n\n" +
+
+        "Größter Gewinn:\nHöchster Gewinn in einer Runde\n\n" +
+
+        " Leaderboard \nder Reichsten Spieler Konten");
+        }
+
+        private void InfoExecute(object parameter)
+        {
+            MessageBox.Show(
+
+        "BLACKJACK\n\n" +
+
+        "Ziel:\n" +
+
+        "Der User muss möglich nah an 21 Punkte kommen.\n\n" +
+
+        "Hit:\nNeue Karte ziehen.\n\n" +
+
+        "Stand:\nKeine Karte ziehen.\n\n" +
+
+        "Double Down:\nEinsatz verdoppeln und genau eine Karte erhalten.\n\n" +
+
+        "Dealer:\nMuss bis mindestens 17 Punkte  weitere Karten ziehen.",
+
+        "Spielanleitung");
         }
     }
 }

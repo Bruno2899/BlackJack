@@ -40,6 +40,10 @@
 
             <StackPanel Grid.Column="1"
                         HorizontalAlignment="Right">
+                <Button Content="Info"
+        Width="120"
+        Height="30"
+        Command="{Binding SpielInfoCommand}"/>
 
                 <TextBlock Text="Einsatz"
                            FontSize="20"
@@ -48,6 +52,7 @@
                 <TextBlock Text="{Binding Einsatz}"
                            FontSize="28"
                            Foreground="Gold"/>
+                
 
             </StackPanel>
 
@@ -113,6 +118,11 @@
         <WrapPanel Grid.Row="2"
                    HorizontalAlignment="Center"
                    Margin="0,30">
+            <Button Content="Double Down"
+                    Width="120"
+                    Height="50"
+                    Margin="0"
+                    Command="{Binding DoubleDownCommand}"/>
 
             <Button Content="Hit"
                     MinWidth="120"
